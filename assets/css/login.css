@@ -11,7 +11,6 @@ body {
 
 section.login .content,
 section.signup .content {
-  /* box-shadow: -5px 2px 54px -9px rgba(0, 0, 0, 1); */
   h1 {
     color: #17a2b8;
   }
