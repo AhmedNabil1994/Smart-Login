@@ -1,0 +1,43 @@
+:root {
+}
+
+body {
+  background-color: #24353f;
+  font-family: sans-serif;
+}
+
+section.login .content,
+section.signup .content {
+  box-shadow: -5px 2px 54px -9px rgba(0, 0, 0, 1);
+  h1 {
+    color: #17a2b8;
+  }
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  input.form-control {
+    background-color: transparent;
+    color: white;
+    &::placeholder {
+      color: #b6b6b6;
+    }
+    &:focus {
+      border-color: #80bdff;
+      box-shadow: none;
+    }
+  }
+  .btn:hover {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .w-sm-100 {
+    width: 100% !important;
+  }
+}
