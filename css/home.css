@@ -1,0 +1,28 @@
+/* shared classes */
+.box-shadow {
+  box-shadow: -5px 2px 54px -9px rgba(0, 0, 0, 1);
+}
+body {
+  background-color: #24353f;
+  font-family: sans-serif;
+}
+.nav-link {
+  border: 1px solid #ffc107;
+  color: #929a90;
+  &:hover {
+    color: white;
+  }
+}
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.1);
+  &:focus {
+    border: 1px solid white;
+    box-shadow: none;
+  }
+}
+header{
+  height: 74vh;
+  h1 {
+    color: #17a2b8;
+  }
+} 
