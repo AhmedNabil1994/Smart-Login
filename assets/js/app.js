@@ -11,9 +11,12 @@ let users = [];
 (function retrieveUsers() {
   users = getFromLocalStorage("users") ? getFromLocalStorage("users") : users;
 })();
-console.log(users, "after get from localstorage");
+console.log(users, "users array after get from localstorage");
 
 function createUser() {
+  if (checkDuplicateEmail()) {
+    return;
+  }
   if (
     validateForm(usernameInput) &&
     validateForm(userEmailInput) &&
@@ -25,7 +28,6 @@ function createUser() {
       password: userPasswordInput.value,
     };
     users.push(user);
-    // console.log(users);
     setToLocalStorage("users", users);
     // clearForm();
     window.location.href = "../../index.html";
@@ -41,6 +43,7 @@ function createUser() {
     document.querySelector("p.error-msg").classList.add("d-none");
   }
 }
+
 if (signupBtn) {
   signupBtn.addEventListener("click", function () {
     createUser();
@@ -69,6 +72,7 @@ function getFromLocalStorage(key) {
 }
 
 function validateForm(input) {
+  document.querySelector(".duplicate-email").classList.add("d-none");
   let regex = {
     name: /^[a-zA-z]{3,15}$/,
     email: /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/,
@@ -92,3 +96,14 @@ function handleInputClick() {
   }
 }
 handleInputClick();
+
+function checkDuplicateEmail() {
+  const inputEmail = userEmailInput.value.trim().toLowerCase();
+  for (let i = 0; i < users.length; i++) {
+    const storedEmail = users[i].email.trim().toLowerCase();
+    if (inputEmail === storedEmail) {
+      document.querySelector(".duplicate-email").classList.remove("d-none");
+      return true;
+    }
+  }
+}
