@@ -40,7 +40,7 @@ function createUser() {
     userEmailInputSignup.value.length === 0 &&
     userPasswordInputSignup.value.length === 0
   ) {
-    clearForm();
+    clearForm(usernameInput, userEmailInputSignup, userPasswordInputSignup);
     document.querySelector("p.error-msg").classList.remove("d-none");
   } else {
     document.querySelector("p.error-msg").classList.add("d-none");
@@ -57,13 +57,15 @@ form.addEventListener("submit", function (e) {
   e.preventDefault();
 });
 
-function clearForm() {
-  usernameInput.value = null;
-  userEmailInputSignup.value = null;
-  userPasswordInputSignup.value = null;
-  usernameInput.nextElementSibling.classList.add("d-none");
-  userEmailInputSignup.nextElementSibling.classList.add("d-none");
-  userPasswordInputSignup.nextElementSibling.classList.add("d-none");
+function clearForm(...inputs) {
+  for (let i = 0; i < inputs.length; i++) {
+    if (inputs[i]) {
+      inputs[i].value = null;
+      if (inputs[i].nextElementSibling) {
+        inputs[i].nextElementSibling.classList.add("d-none");
+      }
+    }
+  }
 }
 
 function setToLocalStorage(key, val) {
@@ -75,7 +77,9 @@ function getFromLocalStorage(key) {
 }
 
 function validateForm(input) {
-  document.querySelector(".duplicate-email").classList.add("d-none");
+  if (document.querySelector(".duplicate-email")) {
+    document.querySelector(".duplicate-email").classList.add("d-none");
+  }
   let regex = {
     name: /^[a-zA-z]{3,15}$/,
     email: /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/,
@@ -117,4 +121,29 @@ function checkDuplicateEmail() {
     userEmailInputlogin.value = signedupUser.email;
     userPasswordInputlogin.value = signedupUser.password;
   }
+  localStorage.removeItem("signedup-user");
 })();
+
+function loginUser() {
+  if (
+    validateForm(userEmailInputlogin) &&
+    validateForm(userPasswordInputlogin)
+  ) {
+    console.log("correct user");
+  }
+  if (
+    userEmailInputlogin.value.length === 0 &&
+    userPasswordInputlogin.value.length === 0
+  ) {
+    clearForm(userEmailInputlogin, userPasswordInputlogin);
+    document.querySelector("p.error-msg").classList.remove("d-none");
+  } else {
+    document.querySelector("p.error-msg").classList.add("d-none");
+  }
+}
+
+if (loginBtn) {
+  loginBtn.addEventListener("click", function () {
+    loginUser();
+  });
+}

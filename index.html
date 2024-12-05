@@ -17,7 +17,7 @@
       <div class="container p-4">
         <div class="content w-sm-100 w-75 mx-auto px-3 py-5 p-md-5 box-shadow">
           <h1 class="text-center text-capitalize">Smart Login System</h1>
-          <form>
+          <form novalidate>
             <div class="mb-3">
               <input
                 type="email"
@@ -25,6 +25,9 @@
                 id="email"
                 placeholder="Enter your email"
               />
+              <p class="text-danger text-center mt-2 d-none">
+                Please enter a valid email address
+              </p>
             </div>
             <div class="mb-3">
               <input
@@ -33,7 +36,15 @@
                 id="password"
                 placeholder="Enter your password"
               />
+              <p class="text-danger text-center mt-2 d-none">
+                Password must be 8-20 characters long, include at least one
+                uppercase letter, one lowercase letter, one number, and one
+                special character."
+              </p>
             </div>
+            <p class="error-msg text-danger text-center m-0 d-none">
+              All inputs are required
+            </p>
             <button id="login" class="btn btn-outline-info w-100 my-3">
               Login
             </button>
