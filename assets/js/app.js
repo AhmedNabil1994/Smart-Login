@@ -1,13 +1,16 @@
 // DOM elements
-let usernameInput = document.getElementById("name");
-let userEmailInput = document.getElementById("email");
-let userPasswordInput = document.getElementById("password");
-let signupBtn = document.getElementById("signup");
-let loginBtn = document.getElementById("login");
-let form = document.querySelector("form");
+const usernameInput = document.getElementById("name");
+const userEmailInputSignup = document.querySelector(".signup input#email");
+const userPasswordInputSignup = document.querySelector(
+  ".signup input#password"
+);
+const userEmailInputlogin = document.querySelector(".login input#email");
+const userPasswordInputlogin = document.querySelector(".login input#password");
+const signupBtn = document.getElementById("signup");
+const loginBtn = document.getElementById("login");
+const form = document.querySelector("form");
 // arrays
 let users = [];
-
 (function retrieveUsers() {
   users = getFromLocalStorage("users") ? getFromLocalStorage("users") : users;
 })();
@@ -19,23 +22,23 @@ function createUser() {
   }
   if (
     validateForm(usernameInput) &&
-    validateForm(userEmailInput) &&
-    validateForm(userPasswordInput)
+    validateForm(userEmailInputSignup) &&
+    validateForm(userPasswordInputSignup)
   ) {
     let user = {
       name: usernameInput.value,
-      email: userEmailInput.value,
-      password: userPasswordInput.value,
+      email: userEmailInputSignup.value,
+      password: userPasswordInputSignup.value,
     };
     users.push(user);
     setToLocalStorage("users", users);
-    // clearForm();
+    setToLocalStorage("signedup-user", user);
     window.location.href = "../../index.html";
   }
   if (
     usernameInput.value.length === 0 &&
-    userEmailInput.value.length === 0 &&
-    userPasswordInput.value.length === 0
+    userEmailInputSignup.value.length === 0 &&
+    userPasswordInputSignup.value.length === 0
   ) {
     clearForm();
     document.querySelector("p.error-msg").classList.remove("d-none");
@@ -56,11 +59,11 @@ form.addEventListener("submit", function (e) {
 
 function clearForm() {
   usernameInput.value = null;
-  userEmailInput.value = null;
-  userPasswordInput.value = null;
+  userEmailInputSignup.value = null;
+  userPasswordInputSignup.value = null;
   usernameInput.nextElementSibling.classList.add("d-none");
-  userEmailInput.nextElementSibling.classList.add("d-none");
-  userPasswordInput.nextElementSibling.classList.add("d-none");
+  userEmailInputSignup.nextElementSibling.classList.add("d-none");
+  userPasswordInputSignup.nextElementSibling.classList.add("d-none");
 }
 
 function setToLocalStorage(key, val) {
@@ -98,7 +101,7 @@ function handleInputClick() {
 handleInputClick();
 
 function checkDuplicateEmail() {
-  const inputEmail = userEmailInput.value.trim().toLowerCase();
+  const inputEmail = userEmailInputSignup.value.trim().toLowerCase();
   for (let i = 0; i < users.length; i++) {
     const storedEmail = users[i].email.trim().toLowerCase();
     if (inputEmail === storedEmail) {
@@ -107,3 +110,11 @@ function checkDuplicateEmail() {
     }
   }
 }
+
+(function retrieveSignedupUser() {
+  let signedupUser = getFromLocalStorage("signedup-user");
+  if (signedupUser) {
+    userEmailInputlogin.value = signedupUser.email;
+    userPasswordInputlogin.value = signedupUser.password;
+  }
+})();
