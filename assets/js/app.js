@@ -8,6 +8,7 @@ const userEmailInputlogin = document.querySelector(".login input#email");
 const userPasswordInputlogin = document.querySelector(".login input#password");
 const signupBtn = document.getElementById("signup");
 const loginBtn = document.getElementById("login");
+const logoutBtn = document.getElementById("logout");
 const form = document.querySelector("form");
 // arrays
 let users = [];
@@ -16,7 +17,7 @@ let users = [];
 })();
 console.log(users, "users array after get from localstorage");
 
-function createUser() {
+function signupUser() {
   if (checkDuplicateEmail()) {
     return;
   }
@@ -49,13 +50,14 @@ function createUser() {
 
 if (signupBtn) {
   signupBtn.addEventListener("click", function () {
-    createUser();
+    signupUser();
   });
 }
-
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
-});
+if (form) {
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+  });
+}
 
 function clearForm(...inputs) {
   for (let i = 0; i < inputs.length; i++) {
@@ -91,6 +93,10 @@ function validateForm(input) {
   } else {
     input.nextElementSibling.classList.replace("d-none", "d-block");
   }
+  if (document.querySelector(".login-error-msg")) {
+    document.querySelector(".login-error-msg").classList.add("d-none");
+  }
+  document.querySelector(".error-msg").classList.add("d-none");
   return isValid;
 }
 
@@ -125,11 +131,37 @@ function checkDuplicateEmail() {
 })();
 
 function loginUser() {
+  let loggedInUser = null;
+  let emailExists = false;
+  let passwordMatches = false;
   if (
     validateForm(userEmailInputlogin) &&
     validateForm(userPasswordInputlogin)
   ) {
-    console.log("correct user");
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].email === userEmailInputlogin.value) {
+        emailExists = true;
+        if (users[i].password === userPasswordInputlogin.value) {
+          loggedInUser = users[i];
+          passwordMatches = true;
+          break;
+        }
+      }
+    }
+    if (loggedInUser) {
+      console.log(loggedInUser, "logged user");
+      setToLocalStorage("loggedUser", loggedInUser);
+      window.location.href = "../../home.html";
+    } else {
+      if (!emailExists) {
+        document.querySelector(".login-error-msg").innerHTML =
+          "Email not found";
+      } else if (!passwordMatches) {
+        document.querySelector(".login-error-msg").innerHTML =
+          "Incorrect password";
+      }
+      document.querySelector(".login-error-msg").classList.remove("d-none");
+    }
   }
   if (
     userEmailInputlogin.value.length === 0 &&
@@ -146,4 +178,30 @@ if (loginBtn) {
   loginBtn.addEventListener("click", function () {
     loginUser();
   });
+}
+
+(function welcomeUser() {
+  const loggedUser = getFromLocalStorage("loggedUser");
+  if (loggedUser) {
+    let username = loggedUser.name;
+    setHomePageUser(`${username.charAt(0).toUpperCase()}${username.slice(1)}`);
+  } else {
+    // window.location.href = "../../index.html";
+  }
+})();
+
+function setHomePageUser(username) {
+  document.querySelector("header h1 span").innerHTML = username;
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", function () {
+    logoutUser();
+  });
+}
+
+function logoutUser() {
+  console.log("logout clicked");
+  localStorage.removeItem("loggedUser");
+  window.location.href = "../../index.html";
 }
