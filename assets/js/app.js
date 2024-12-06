@@ -12,6 +12,7 @@ const logoutBtn = document.getElementById("logout");
 const form = document.querySelector("form");
 // arrays
 let users = [];
+
 (function retrieveUsers() {
   users = getFromLocalStorage("users") ? getFromLocalStorage("users") : users;
 })();
@@ -34,7 +35,7 @@ function signupUser() {
     users.push(user);
     setToLocalStorage("users", users);
     setToLocalStorage("signedup-user", user);
-    window.location.href = "../../index.html";
+    window.location.href = "/index.html";
   }
   if (
     usernameInput.value.length === 0 &&
@@ -53,6 +54,7 @@ if (signupBtn) {
     signupUser();
   });
 }
+
 if (form) {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -151,7 +153,7 @@ function loginUser() {
     if (loggedInUser) {
       console.log(loggedInUser, "logged user");
       setToLocalStorage("loggedUser", loggedInUser);
-      window.location.href = "../../home.html";
+      window.location.href = "/home.html";
     } else {
       if (!emailExists) {
         document.querySelector(".login-error-msg").innerHTML =
@@ -180,17 +182,15 @@ if (loginBtn) {
   });
 }
 
-(function welcomeUser() {
+(function setHomePageUser() {
   const loggedUser = getFromLocalStorage("loggedUser");
   if (loggedUser) {
     let username = loggedUser.name;
-    setHomePageUser(`${username.charAt(0).toUpperCase()}${username.slice(1)}`);
-  } else {
-    // window.location.href = "../../index.html";
+    welcomeUser(`${username.charAt(0).toUpperCase()}${username.slice(1)}`);
   }
 })();
 
-function setHomePageUser(username) {
+function welcomeUser(username) {
   document.querySelector("header h1 span").innerHTML = username;
 }
 
@@ -201,7 +201,22 @@ if (logoutBtn) {
 }
 
 function logoutUser() {
-  console.log("logout clicked");
   localStorage.removeItem("loggedUser");
-  window.location.href = "../../index.html";
+  window.location.href = "/index.html";
 }
+
+/**
+ * Redirects the user to the login page if they are not logged in and attempting to access the home page.
+ *
+ * @description Checks if the user is logged in by retrieving their information from localStorage.
+ * If the user is not logged in and the current page is `/home.html`, they will be redirected to `/index.html`.
+ */
+const preventUnauthorizedAccess = function () {
+  const loggedUser = getFromLocalStorage("loggedUser");
+  if (!loggedUser && window.location.pathname === "/home.html") {
+    window.location.href = "/index.html";
+  } else {
+    document.body.classList.remove("d-none");
+  }
+};
+preventUnauthorizedAccess();
