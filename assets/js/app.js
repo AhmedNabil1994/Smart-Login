@@ -1,3 +1,4 @@
+"use strict";
 // DOM elements
 const usernameInput = document.getElementById("name");
 const userEmailInputSignup = document.querySelector(".signup input#email");
@@ -53,15 +54,24 @@ function signupUser() {
     setToLocalStorage("signedup-user", user);
     window.location.href = "/index.html";
   }
-  if (
-    usernameInput.value.length === 0 &&
-    userEmailInputSignup.value.length === 0 &&
-    userPasswordInputSignup.value.length === 0
-  ) {
-    clearForm(usernameInput, userEmailInputSignup, userPasswordInputSignup);
-    document.querySelector("p.error-msg").classList.remove("d-none");
+  checkNullInputs(
+    [usernameInput, userEmailInputSignup, userPasswordInputSignup],
+    "p.error-msg"
+  );
+}
+
+/**
+ * @description Validates if all input fields are empty, clears them if they are, and toggles the visibility of an error message.
+ * @param {HTMLInputElement[]} inputs - An array of input elements to validate.
+ * @param {string} errMsgSelector - A CSS selector for the error message element to show or hide.
+ */
+function checkNullInputs(inputs, errMsgSelector) {
+  const allEmpty = inputs.every((input) => input.value.length === 0);
+  if (allEmpty) {
+    clearForm(...inputs);
+    document.querySelector(errMsgSelector).classList.remove("d-none");
   } else {
-    document.querySelector("p.error-msg").classList.add("d-none");
+    document.querySelector(errMsgSelector).classList.add("d-none");
   }
 }
 
@@ -221,16 +231,7 @@ function loginUser() {
       document.querySelector(".login-error-msg").classList.remove("d-none");
     }
   }
-  // check empty inputs
-  if (
-    userEmailInputlogin.value.length === 0 &&
-    userPasswordInputlogin.value.length === 0
-  ) {
-    clearForm(userEmailInputlogin, userPasswordInputlogin);
-    document.querySelector("p.error-msg").classList.remove("d-none");
-  } else {
-    document.querySelector("p.error-msg").classList.add("d-none");
-  }
+  checkNullInputs([userEmailInputlogin, userPasswordInputlogin], "p.error-msg");
 }
 
 if (loginBtn) {
